@@ -13,8 +13,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 🔴 PASTE YOUR RENDER URL HERE (Ensure no trailing slash)
-  const API_URL = "https://handsight-backend.onrender.com"; 
+  const API_URL = "https://handsight-backend.onrender.com";
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

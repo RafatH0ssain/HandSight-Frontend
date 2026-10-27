@@ -1,37 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HandSight-Frontend
 
-## Getting Started
+A single-page Next.js app for a handwriting-analysis demo. You upload a
+handwriting sample, the app sends it to a backend service, and the response
+comes back as trait scores with slant-angle and pen-pressure values, rendered
+as animated bars.
 
-First, run the development server:
+Live demo: https://hand-sight-frontend.vercel.app/
+
+## How it works
+
+`app/page.tsx` handles the whole flow. Pick an image (JPG or PNG) and the page
+shows a preview with a scan animation while the request is in flight. On
+analyze, the file goes as multipart form data to the `/analyze` endpoint of
+`https://handsight-backend.onrender.com`, and the JSON response is rendered as
+trait progress bars plus the slant and pressure numbers from
+`analysis_reasoning`. The analysis runs on that backend; this repo is only the
+UI. The backend runs on Render's free tier, so the first request after an idle
+period can fail while the service wakes up.
+
+## Stack
+
+- Next.js 16 (App Router), React 19, TypeScript
+- Tailwind CSS 4
+- framer-motion for the upload scan and result animations
+- axios for the API call, lucide-react for icons
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [[http://localhost:3000](https://hand-sight-frontend.vercel.app/)]([http://localhost:3000](https://hand-sight-frontend.vercel.app/)) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-"# HandSight-Frontend" 
+Then open http://localhost:3000. Analysis needs the backend service to be awake.
