@@ -5,15 +5,23 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { Upload, ScanLine, Brain, Activity, CheckCircle, AlertCircle } from "lucide-react";
 
+interface AnalyzeResult {
+  traits: Record<string, number>;
+  analysis_reasoning: {
+    slant_score: number;
+    pressure_score: number;
+  };
+}
+
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<AnalyzeResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const API_URL = "https://handsight-backend.onrender.com";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://handsight-backend.onrender.com";
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -59,13 +67,13 @@ export default function Home() {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/30 border border-cyan-800/50 text-cyan-400 text-sm font-medium mb-6"
           >
             <Brain className="w-4 h-4" />
-            <span>Neural Handwriting Analysis v1.0</span>
+            <span>Handwriting Analysis Demo v1.0</span>
           </motion.div>
           <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-500 bg-clip-text text-transparent mb-4">
             Trait Detector
           </h1>
           <p className="text-slate-400 max-w-lg mx-auto">
-            Upload a handwriting sample. Our computer vision engine extracts biometric features to predict personality traits.
+            Upload a handwriting sample to see the trait scores, slant, and pressure values returned by the analysis backend. This is a demo; the scores are illustrative only.
           </p>
         </header>
 
@@ -125,7 +133,7 @@ export default function Home() {
             >
               {loading ? (
                 <>
-                  <ScanLine className="w-5 h-5 animate-spin-slow" />
+                  <ScanLine className="w-5 h-5 animate-spin" />
                   PROCESSING...
                 </>
               ) : (
@@ -160,7 +168,7 @@ export default function Home() {
                     </h3>
                     
                     <div className="space-y-5">
-                      {Object.entries(result.traits).map(([trait, score]: [string, any]) => (
+                      {Object.entries(result.traits).map(([trait, score]) => (
                         <div key={trait}>
                           <div className="flex justify-between text-sm mb-1.5">
                             <span className="text-slate-300">{trait}</span>
